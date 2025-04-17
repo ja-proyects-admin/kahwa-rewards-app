@@ -18,7 +18,17 @@ steps:
           echo "SA=cloud-functions-deployer-dev@apps-backend-dev-01.iam.gserviceaccount.com" >> /workspace/env_vars.sh
         fi
 
-  # Paso 1: Cargar variables y hacer deploy
+  # Paso 1: Mostrar variables seteadas (debug)
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+    id: show-env
+    entrypoint: 'bash'
+    args:
+      - -c
+      - |
+        echo "📦 Variables de entorno:"
+        cat /workspace/env_vars.sh
+
+  # Paso 2: Cargar variables y hacer deploy
   - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
     id: deploy-cloud-function
     entrypoint: 'bash'
@@ -28,6 +38,7 @@ steps:
         source /workspace/env_vars.sh
 
         echo "🚀 Deploying to project: $PROJECT_ID"
+        echo "🔐 Using SA: $SA"
         gcloud config set project $PROJECT_ID
 
         gcloud functions deploy kahwa_rewards_api \
