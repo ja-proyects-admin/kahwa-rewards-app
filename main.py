@@ -14,4 +14,3 @@ def hello_http(request: Request):
         "message": message,
         "timestamp": timestamp
     }
-
