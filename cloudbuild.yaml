@@ -11,11 +11,11 @@ steps:
         if [[ "$BRANCH_NAME" =~ ^main$ ]]; then
           echo "🎯 Entorno: PROD"
           echo "PROJECT_ID=apps-backend-prod-01" >> /workspace/env_vars.sh
-          echo "SA=cloud-functions-deployer-prod@apps-backend-prod-01.iam.gserviceaccount.com" >> /workspace/env_vars.sh
+          echo "SERVICE_ACCOUNT=cloud-functions-deployer-prod@apps-backend-prod-01.iam.gserviceaccount.com" >> /workspace/env_vars.sh
         else
           echo "🎯 Entorno: DEV"
           echo "PROJECT_ID=apps-backend-dev-01" >> /workspace/env_vars.sh
-          echo "SA=cloud-functions-deployer-dev@apps-backend-dev-01.iam.gserviceaccount.com" >> /workspace/env_vars.sh
+          echo "SERVICE_ACCOUNT=cloud-functions-deployer-dev@apps-backend-dev-01.iam.gserviceaccount.com" >> /workspace/env_vars.sh
         fi
 
   # Paso 1: Mostrar variables seteadas (debug)
@@ -38,7 +38,7 @@ steps:
         source /workspace/env_vars.sh
 
         echo "🚀 Deploying to project: $PROJECT_ID"
-        echo "🔐 Using SA: $SA"
+        echo "🔐 Using SA: $SERVICE_ACCOUNT"
         gcloud config set project $PROJECT_ID
 
         gcloud functions deploy kahwa_rewards_api \
@@ -49,7 +49,7 @@ steps:
           --entry-point=hello_http \
           --trigger-http \
           --allow-unauthenticated \
-          --service-account=$SA
+          --service-account=$SERVICE_ACCOUNT
 
 options:
   logging: CLOUD_LOGGING_ONLY
