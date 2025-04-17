@@ -1,0 +1,29 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Caches
+.cache/
+*.log
+
+# Env / virtualenv
+.env
+.venv
+env/
+venv/
+ENV/
+
+# VSCode settings
+.vscode/
+
+# MacOS / Linux / Windows
+.DS_Store
+Thumbs.db
+
+# Cloud Function deploy artifacts
+.nox/
+build/
+dist/
+.pytest_cache/
+.gcloudignore

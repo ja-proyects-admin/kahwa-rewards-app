@@ -1,0 +1,44 @@
+steps:
+  # Paso 0: Determinar entorno en base a la rama
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+    id: set-env-vars
+    entrypoint: 'bash'
+    args:
+      - -c
+      - |
+        echo "🔎 Rama actual: $BRANCH_NAME"
+
+        if [[ "$BRANCH_NAME" =~ ^main$ ]]; then
+          echo "🎯 Entorno: PROD"
+          echo "PROJECT_ID=apps-backend-prod-01" >> /workspace/env_vars.sh
+          echo "SA=cloud-functions-deployer-prod@apps-backend-prod-01.iam.gserviceaccount.com" >> /workspace/env_vars.sh
+        else
+          echo "🎯 Entorno: DEV"
+          echo "PROJECT_ID=apps-backend-dev-01" >> /workspace/env_vars.sh
+          echo "SA=cloud-functions-deployer-dev@apps-backend-dev-01.iam.gserviceaccount.com" >> /workspace/env_vars.sh
+        fi
+
+  # Paso 1: Cargar variables y hacer deploy
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+    id: deploy-cloud-function
+    entrypoint: 'bash'
+    args:
+      - -c
+      - |
+        source /workspace/env_vars.sh
+
+        echo "🚀 Deploying to project: $PROJECT_ID"
+        gcloud config set project $PROJECT_ID
+
+        gcloud functions deploy kahwa_rewards_api \
+          --gen2 \
+          --runtime=python310 \
+          --region=us-central1 \
+          --source=. \
+          --entry-point=hello_http \
+          --trigger-http \
+          --allow-unauthenticated \
+          --service-account=$SA
+
+options:
+  logging: CLOUD_LOGGING_ONLY
