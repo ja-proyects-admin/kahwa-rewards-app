@@ -49,7 +49,7 @@ steps:
           --entry-point=hello_http \
           --trigger-http \
           --allow-unauthenticated \
-          --service-account=$SERVICE_ACCOUNT
+          --service-account="$SERVICE_ACCOUNT"
 
 options:
   logging: CLOUD_LOGGING_ONLY
